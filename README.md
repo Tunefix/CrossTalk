@@ -33,7 +33,7 @@ Start the client(s), type in the ip/url to the server and click "connect".
 * OPUS 32 kbit/s mono
 * OPUS 16 kbit/s mono
 
-**Note:** Remeber that all audio is first encoded on each client before being sent to the server. On the server it is being decoded, mixed and encoded again before being sent back. On the client it is then decoded. This means that all audio is being coded twice, and this can have advere effects on the sound quality. It is therefore recommended to use a high quality codec, such as OPUS 128 kbit/s mono.
+**Note:** Remeber that all audio is first encoded on each client before being sent to the server. On the server it is being decoded, mixed and encoded again before being sent back. On the client it is then decoded. This means that all audio is being coded twice, and this will have adverse effects on the sound quality, especially if using havy compression i.e. low bitrates. It is therefore recommended to use a high quality codec, such as OPUS 128 kbit/s mono.
 
 **Note 2:** The PCM 32bit float 48Khz format uses a _HUGE_ amount of bandwith, and should only be used when on a local network (LAN).
 
