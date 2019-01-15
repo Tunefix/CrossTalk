@@ -9,6 +9,18 @@ On the server you can set the individual names of the loops, and the names will 
 
 The client supports system-wide PTT (Push-To-Talk) using a keyboard-button of your choosing.
 
+### SCREENSHOTS
+
+![alt tag](https://i.imgur.com/WjHpB0H.png)
+Client Screenshot
+
+![alt tag](https://i.imgur.com/Y8WqerR.png)
+Server Screenshot
+
+### GETTING STARTED
+Run the server, and make sure the server-pc gets traffic on UPD-port 32123.
+Start the client(s), type in the ip/url to the server and click "connect".
+
 ### AUDIO TRANSMISSION FORMATS
 * PCM 32bit float 48kHz (3000 kbit/s)
 * G722 48kHz stereo (384 kbit/s)
@@ -28,10 +40,4 @@ The client supports system-wide PTT (Push-To-Talk) using a keyboard-button of yo
 **Note on the difference between OPUS and G722:**
 Some might wonder why I have the G722-codec in here. It has one big advantage over OPUS, and that is it will not "bubble". Instead the frequency-response gets lower as bandwith gets lower.
 
-### SCREENSHOTS
 
-![alt tag](https://i.imgur.com/WjHpB0H.png)
-Client Screenshot
-
-![alt tag](https://i.imgur.com/Y8WqerR.png)
-Server Screenshot
