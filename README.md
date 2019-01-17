@@ -39,7 +39,3 @@ Start the client(s), type in the ip/url to the server and click "connect".
 
 **Note on the difference between OPUS and G722:**
 Some might wonder why I have the G722-codec in here. It has one big advantage over OPUS, and that is it will not "bubble". Instead the frequency-response gets lower as bandwith is lowered. (Bandwith is a function of the input sample-rate.)
-
-## Why is there no source here?
-I have not published the source, yet, and will continue to keep it unpublished.
-If there is enough demand for the source to be released, I probably will do it.
