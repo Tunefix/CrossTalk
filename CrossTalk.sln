@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossTalk", "CrossTalk\CrossTalk.csproj", "{D7D00A97-0AE5-4735-83C3-EB623D6E4FDC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossTalkClient", "CrossTalkClient\CrossTalkClient.csproj", "{21219061-270A-4539-8CDE-F3DF4CBB86D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossTalkServer", "CrossTalkServer\CrossTalkServer.csproj", "{3FB090AF-26DD-4927-A453-E4C20C92A919}"
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D7D00A97-0AE5-4735-83C3-EB623D6E4FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7D00A97-0AE5-4735-83C3-EB623D6E4FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7D00A97-0AE5-4735-83C3-EB623D6E4FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7D00A97-0AE5-4735-83C3-EB623D6E4FDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{21219061-270A-4539-8CDE-F3DF4CBB86D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{21219061-270A-4539-8CDE-F3DF4CBB86D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21219061-270A-4539-8CDE-F3DF4CBB86D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
