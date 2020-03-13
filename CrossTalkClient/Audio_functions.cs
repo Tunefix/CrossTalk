@@ -229,6 +229,17 @@ namespace CrossTalkClient
 				buffer.AddSamples(samples.ToArray(), 0, samples.Count);
 				//Console.WriteLine(DateTime.Now.TimeOfDay + ": ADDED " + (samples.Count / 4) + " samples to output buffer.");
 
+				// Check Buffer length and trim if necessary
+				double buffer_millisecs = buffer.BufferedDuration.TotalMilliseconds;
+				if (buffer_millisecs > 400)
+				{
+					double bytes_to_read = (sampleRate / 1000) * channels * (buffer_millisecs - 400);
+					byte[] void_array = new byte[(int)bytes_to_read];
+					buffer.Read(void_array, 0, (int)bytes_to_read);
+
+					Console.WriteLine("Trew away " + bytes_to_read.ToString() + " bytes");
+				}
+
 			}
 			catch
 			{
