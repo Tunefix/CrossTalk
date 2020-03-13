@@ -22,6 +22,15 @@ namespace CrossTalkServer
 		private void addIncomingAudioToClientBuffer(byte[] data, Client sender)
 		{
 			sender.inputStream.AddSamples(data, 0, data.Length);
+
+			// Check for length of buffer and trow away samples if needed
+			double buffer_length = sender.inputStream.BufferedDuration.TotalMilliseconds;
+			if(buffer_length > 400)
+			{
+				int bytes_to_trow = (int)((sampleRate / 1000) * channels * (buffer_length - 400));
+				byte[] null_buffer = new byte[bytes_to_trow];
+				sender.inputStream.Read(null_buffer, 0, bytes_to_trow);
+			}
 		}
 
 		private void FetchAudio()
