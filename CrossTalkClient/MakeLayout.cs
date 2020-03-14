@@ -285,7 +285,7 @@ namespace CrossTalkClient
 			serverAddr.Font = font;
 			serverAddr.AutoSize = false;
 			serverAddr.TextAlign = HorizontalAlignment.Left;
-			serverAddr.Text = "127.0.0.1";
+			serverAddr.Text = Server_IP;
 			this.Controls.Add(serverAddr);
 
 			connectButton = new MocrButton();

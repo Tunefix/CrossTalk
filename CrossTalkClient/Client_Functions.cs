@@ -74,6 +74,7 @@ namespace CrossTalkClient
 
 		// CLIENT DATA
 		string GUID;
+		string Server_IP;
 
 
 		private void ConnectToServer(object sender, EventArgs e)
@@ -96,6 +97,9 @@ namespace CrossTalkClient
 					// SEND AUDIO FORMAT REQUEST
 					byte[] cmd = GetCmdBytes(CMDS.SetClientAudioFormat, (byte)audioFormatSelector.SelectedIndex);
 					client.Send(cmd);
+
+					// STORE IP ADDRESS
+					StoreSetting("server_ip", serverAddr.Text);
 
 
 					//wait for reply messages from server and send them to console
@@ -247,6 +251,31 @@ namespace CrossTalkClient
 				GUID = newGuid;
 				File.WriteAllText(path, newGuid);
 			}
+
+			// READ SETTINGS FILE (IF FOUND)
+			path = AppDomain.CurrentDomain.BaseDirectory + "settings.cfg";
+			if(File.Exists(path))
+			{
+				string[] lines = File.ReadAllLines(path);
+				foreach(string line in lines)
+				{
+					// Skip comments
+					if(line.Trim().Substring(0,2) == "//") { continue; }
+
+					// Divide line in setting and value
+					string[] chunks = line.Split(':');
+
+					switch(chunks[0])
+					{
+						case "server_ip":
+							Server_IP = chunks[1];
+							break;
+					}
+				}
+			}
+
+			// SET DEFAULT VALUES IF SETTING IS EMPTY (NOT READ FROM FILE)
+			if (Server_IP == null) Server_IP = "127.0.0.1";
 		}
 
 		private void GetAudioInputs()
@@ -599,6 +628,45 @@ namespace CrossTalkClient
 			askingForPTTkey = true;
 			askForPTTKeyBox.Visible = true;
 			askForPTTKeyBox.BringToFront();
+		}
+
+		private void StoreSetting(string setting, string value)
+		{
+			string path = AppDomain.CurrentDomain.BaseDirectory + "settings.cfg";
+			List<string> lines;
+
+			if (File.Exists(path))
+			{
+				lines = File.ReadAllLines(path).ToList();
+				bool found_setting = false;
+				for (int i = 0; i < lines.Count; i++)
+				{
+					// Skip comments
+					if (lines[i].Trim().Substring(0, 2) == "//") { continue; }
+
+					// Divide line in setting and value
+					string[] chunks = lines[i].Split(':');
+
+					if (chunks[0] == setting)
+					{
+						lines[i] = setting + ":" + value;
+						found_setting = true;
+					}
+				}
+
+				// If setting is not in file, add it to the end
+				if (found_setting == false)
+				{
+					lines.Add(setting + ":" + value);
+				}
+			}
+			else
+			{
+				lines = new List<string>();
+				lines.Add(setting + ":" + value);
+			}
+
+			File.WriteAllLines(path, lines.ToArray());
 		}
 	
 	}
