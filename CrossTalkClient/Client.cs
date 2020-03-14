@@ -17,7 +17,7 @@ namespace CrossTalkClient
 		static int numLoops = 16;
 		int MajorVersion = 0;
 		int MinorVersion = 5;
-		int Revision = 0;
+		int Revision = 1;
 
 		int mainServerInterval = 100;
 		int minimumServerInterval = 100;

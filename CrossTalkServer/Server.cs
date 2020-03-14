@@ -15,7 +15,7 @@ namespace CrossTalkServer
 	{
 		int MajorVersion = 0;
 		int MinorVersion = 5;
-		int Revision = 0;
+		int Revision = 1;
 
 		private Logging Logger;
 
