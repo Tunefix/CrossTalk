@@ -88,6 +88,7 @@
     <Compile Include="LineGraph.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Logging.cs" />
     <Compile Include="Server.cs">
       <SubType>Form</SubType>
     </Compile>

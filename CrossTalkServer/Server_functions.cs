@@ -130,24 +130,24 @@ namespace CrossTalkServer
 				start = DateTime.UtcNow;
 
 				// DO STUFF
-				try { FetchAudio(); }catch(Exception e) { Console.WriteLine("An error occurred: '{0}'", e); }
+				try { FetchAudio(); }catch(Exception e) { Logger.WriteLine("An error occurred: " + e); }
 				timeTMPa = DateTime.UtcNow;
 				duration = timeTMPa - start;
 				AddDoubleToList(TimingSeg1, duration.TotalMilliseconds, timingMaxValues);
 
 				if (processAudio)
 				{
-					try { MixAudio(); } catch (Exception e) { Console.WriteLine("An error occurred: '{0}'", e); }
+					try { MixAudio(); } catch (Exception e) { Logger.WriteLine("An error occurred: " + e); }
 					timeTMPb = DateTime.UtcNow;
 					duration = timeTMPb - timeTMPa;
 					AddDoubleToList(TimingSeg2, duration.TotalMilliseconds, timingMaxValues);
 
-					try { SendAudio(); } catch (Exception e) { Console.WriteLine("An error occurred: '{0}'", e); }
+					try { SendAudio(); } catch (Exception e) { Logger.WriteLine("An error occurred: " + e); }
 					timeTMPa = DateTime.UtcNow;
 					duration = timeTMPa - timeTMPb;
 					AddDoubleToList(TimingSeg3, duration.TotalMilliseconds, timingMaxValues);
 
-					try { UpdateMeters(); } catch (Exception e) { Console.WriteLine("An error occurred: '{0}'", e); }
+					try { UpdateMeters(); } catch (Exception e) { Logger.WriteLine("An error occurred: " + e); }
 					timeTMPb = DateTime.UtcNow;
 					duration = timeTMPb - timeTMPa;
 					AddDoubleToList(TimingSeg4, duration.TotalMilliseconds, timingMaxValues);
@@ -238,7 +238,7 @@ namespace CrossTalkServer
 				// CLIENT CONNECTED
 				string client_guid = Encoding.ASCII.GetString(data).Substring(3);
 
-				Console.WriteLine("SERVER RECEIVED: " + Encoding.ASCII.GetString(data));
+				Logger.WriteLine("SERVER RECEIVED: " + Encoding.ASCII.GetString(data));
 				udpServer.Reply(Encoding.ASCII.GetBytes("HELLO CLIENT!"), sender);
 
 				lock (clientsLock)
@@ -284,7 +284,7 @@ namespace CrossTalkServer
 				if (Encoding.ASCII.GetString(data) == "BYE SERVER!")
 				{
 					// CLIENT CONNECTED
-					Console.WriteLine("SERVER RECEIVED: " + Encoding.ASCII.GetString(data));
+					Logger.WriteLine("SERVER RECEIVED: " + Encoding.ASCII.GetString(data));
 
 					lock (clientsLock)
 					{
@@ -305,7 +305,7 @@ namespace CrossTalkServer
 				else if (data.Length == 3)
 				{
 					// RECEIVED COMMAND
-					Console.WriteLine("SERVER RECEIVED COMMAND: " + data[0] + " " + data[1] + " " + data[2]);
+					Logger.WriteLine("SERVER RECEIVED COMMAND: " + data[0] + " " + data[1] + " " + data[2]);
 					CMD.ExecuteCmd(data, c.guid);
 				}
 				else

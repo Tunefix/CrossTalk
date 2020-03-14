@@ -36,7 +36,7 @@ namespace CrossTalkServer
 			int i = 0;
 			foreach (MMDevice wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
 			{
-				Console.WriteLine($"{wasapi.ID} {wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
+				Logger.WriteLine($"{wasapi.ID} {wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
 				outputs.Add(i, wasapi);
 				audioOutputSelector.Items.Add(wasapi.FriendlyName);
 				i++;
@@ -76,7 +76,7 @@ namespace CrossTalkServer
 			output.Init(resampler);
 			output.Play();
 
-			Console.WriteLine("SET OUTPUT FORMAT: "
+			Logger.WriteLine("SET OUTPUT FORMAT: "
 				+ "Sample Rate: " + sampleRate
 				+ ", BitsPrSasmple: " + bitsPrSample
 				+ ", Channels: " + channels);

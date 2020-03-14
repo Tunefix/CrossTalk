@@ -23,6 +23,7 @@ namespace CrossTalkClient
 		int minimumServerInterval = 100;
 
 		private LowLevelKeyboardListener _listener;
+		private Logging Logger;
 
 
 		public Client()
@@ -32,6 +33,8 @@ namespace CrossTalkClient
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			Logger = new Logging();
+
 			this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "Resources\\darknoise.png");
 			this.BackColor = Color.FromArgb(72, 72, 72);
 			this.ClientSize = new Size(794, 417);
@@ -116,22 +119,22 @@ namespace CrossTalkClient
 				if (duration.TotalMilliseconds > mainServerInterval)
 				{
 					// NOTIFY OF SLOW EXECUTION
-					Console.WriteLine("=== SLOW EXECUTION ===");
-					Console.WriteLine("ServerMainLoop used " + Math.Round(duration.TotalMilliseconds, 2) + " on the last run.");
+					Logger.WriteLine("=== SLOW EXECUTION ===");
+					Logger.WriteLine("ServerMainLoop used " + Math.Round(duration.TotalMilliseconds, 2) + " on the last run.");
 
 					// TRY TO REMEDY THE SITUATION BY RUNNING SLOWER, BUT HANDLING MORE DATA EACH TIME
 					mainServerInterval++;
-					Console.WriteLine("Increasing mainServerInterval to " + mainServerInterval + " ms.");
+					Logger.WriteLine("Increasing mainServerInterval to " + mainServerInterval + " ms.");
 				}
 				else if (mainServerInterval > minimumServerInterval && duration.TotalMilliseconds < (mainServerInterval / 2f))
 				{
 					// NOTIFY OF FAST EXECUTION
-					Console.WriteLine("=== FAST EXECUTION ===");
-					Console.WriteLine("ServerMainLoop used " + Math.Round(duration.TotalMilliseconds, 2) + " on the last run.");
+					Logger.WriteLine("=== FAST EXECUTION ===");
+					Logger.WriteLine("ServerMainLoop used " + Math.Round(duration.TotalMilliseconds, 2) + " on the last run.");
 
 					// INCREASE SPEED TO GET LOWER LATENCY
 					mainServerInterval--;
-					Console.WriteLine("Decreasing mainServerInterval to " + mainServerInterval + " ms.");
+					Logger.WriteLine("Decreasing mainServerInterval to " + mainServerInterval + " ms.");
 				}
 
 				// SLEEP THE REMAINDER OF THE INTERVAL

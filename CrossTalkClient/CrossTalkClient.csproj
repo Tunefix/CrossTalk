@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="helper.cs" />
     <Compile Include="InterceptKeys.cs" />
+    <Compile Include="Logging.cs" />
     <Compile Include="Resampler.cs" />
     <Compile Include="MakeLayout.cs">
       <SubType>Form</SubType>

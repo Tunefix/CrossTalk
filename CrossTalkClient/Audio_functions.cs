@@ -233,17 +233,18 @@ namespace CrossTalkClient
 				double buffer_millisecs = buffer.BufferedDuration.TotalMilliseconds;
 				if (buffer_millisecs > 400)
 				{
-					double bytes_to_read = (sampleRate / 1000) * channels * (buffer_millisecs - 400);
+					double bytes_to_read = (sampleRate / 1000) * channels * 200;
+					//double bytes_to_read = (sampleRate / 1000) * channels * (buffer_millisecs - 400);
 					byte[] void_array = new byte[(int)bytes_to_read];
 					buffer.Read(void_array, 0, (int)bytes_to_read);
 
-					Console.WriteLine("Trew away " + bytes_to_read.ToString() + " bytes");
+					Logger.WriteLine("Trew away " + bytes_to_read.ToString() + " bytes");
 				}
 
 			}
 			catch
 			{
-				Console.WriteLine("Form Closed, exception thrown, ignore.");
+				Logger.WriteLine("Form Closed, exception thrown, ignore.");
 			}
 		}
 

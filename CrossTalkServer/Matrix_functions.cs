@@ -27,7 +27,8 @@ namespace CrossTalkServer
 			double buffer_length = sender.inputStream.BufferedDuration.TotalMilliseconds;
 			if(buffer_length > 400)
 			{
-				int bytes_to_trow = (int)((sampleRate / 1000) * channels * (buffer_length - 400));
+				int bytes_to_trow = (int)((sampleRate / 1000) * channels * 200);
+				//int bytes_to_trow = (int)((sampleRate / 1000) * channels * (buffer_length - 400));
 				byte[] null_buffer = new byte[bytes_to_trow];
 				sender.inputStream.Read(null_buffer, 0, bytes_to_trow);
 			}

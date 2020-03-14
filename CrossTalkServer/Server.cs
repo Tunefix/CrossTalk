@@ -17,6 +17,7 @@ namespace CrossTalkServer
 		int MinorVersion = 5;
 		int Revision = 0;
 
+		private Logging Logger;
 
 		public Server()
 		{
@@ -25,9 +26,11 @@ namespace CrossTalkServer
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			Logger = new Logging();
+
 			AppDomain.CurrentDomain.FirstChanceException += (a, eventArgs) =>
 			{
-				Console.WriteLine(eventArgs.Exception.ToString()
+				Logger.WriteLine(eventArgs.Exception.ToString()
 					+ "\n" + eventArgs.Exception.StackTrace
 					+ "\n" + eventArgs.Exception.TargetSite);
 

@@ -113,7 +113,7 @@ namespace CrossTalkClient
 							}
 							catch (Exception ex)
 							{
-								Console.WriteLine(ex);
+								Logger.WriteLine(ex.ToString());
 							}
 						}
 					});
@@ -149,7 +149,7 @@ namespace CrossTalkClient
 		{
 			if (Encoding.ASCII.GetString(data) == "HELLO CLIENT!")
 			{
-				Console.WriteLine("CLIENT RECEIVED: " + Encoding.ASCII.GetString(data));
+				Logger.WriteLine("CLIENT RECEIVED: " + Encoding.ASCII.GetString(data));
 				Invoke(new Action(() =>
 				{
 					setClientConnectedStatus(true);
@@ -158,7 +158,7 @@ namespace CrossTalkClient
 			}
 			else if (Encoding.ASCII.GetString(data) == "BYE CLIENT!")
 			{
-				Console.WriteLine("CLIENT RECEIVED: " + Encoding.ASCII.GetString(data));
+				Logger.WriteLine("CLIENT RECEIVED: " + Encoding.ASCII.GetString(data));
 				Invoke(new Action(() =>
 				{
 					setClientConnectedStatus(false);
@@ -166,7 +166,7 @@ namespace CrossTalkClient
 			}
 			else if (Encoding.ASCII.GetString(data).Substring(0,3) == "LPN")
 			{
-				Console.WriteLine("CLIENT RECEIVED: " + Encoding.ASCII.GetString(data));
+				Logger.WriteLine("CLIENT RECEIVED: " + Encoding.ASCII.GetString(data));
 				string str = Encoding.ASCII.GetString(data).Substring(3);
 
 				// UPDATE LOOP NAME
@@ -183,7 +183,7 @@ namespace CrossTalkClient
 			else if (data.Length == 3)
 			{
 				// RECEIVED COMMAND
-				Console.WriteLine("CLIENT RECEIVED COMMAND: " + data[0] + " " + data[1] + " " + data[2]);
+				Logger.WriteLine("CLIENT RECEIVED COMMAND: " + data[0] + " " + data[1] + " " + data[2]);
 				ExecuteCmd(data, sender);
 			}
 			else
@@ -204,12 +204,12 @@ namespace CrossTalkClient
 			if (outputBuffer.BufferedDuration < TimeSpan.FromMilliseconds(40) && output.PlaybackState != PlaybackState.Paused)
 			{
 				output.Pause();
-				Console.WriteLine(DateTime.Now.TimeOfDay + ": OUTPUT PAUSED");
+				Logger.WriteLine(DateTime.Now.TimeOfDay + ": OUTPUT PAUSED");
 			}
 			else if (outputBuffer.BufferedDuration > TimeSpan.FromMilliseconds(40) && output.PlaybackState != PlaybackState.Playing)
 			{
 				output.Play();
-				Console.WriteLine(DateTime.Now.TimeOfDay + ": OUTPUT PLAYING");
+				Logger.WriteLine(DateTime.Now.TimeOfDay + ": OUTPUT PLAYING");
 			}
 
 			// UPDATE OUTPUT STATE INDICATORS
@@ -260,7 +260,7 @@ namespace CrossTalkClient
 			int i = 0;
 			foreach (MMDevice wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active))
 			{
-				Console.WriteLine($"{wasapi.ID} {wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
+				Logger.WriteLine($"{wasapi.ID} {wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
 				inputs.Add(i, wasapi);
 				audioInputSelector.Items.Add(wasapi.FriendlyName);
 				i++;
@@ -295,7 +295,7 @@ namespace CrossTalkClient
 
 			SetInputMode(0);
 
-			Console.WriteLine("SET INPUT FORMAT: "
+			Logger.WriteLine("SET INPUT FORMAT: "
 				+ "Sample Rate: " + inputSampleRate
 				+ ", BitsPrSasmple: " + inputBitsPrSample
 				+ ", Channels: " + inputChannels);
@@ -318,7 +318,7 @@ namespace CrossTalkClient
 			int i = 0;
 			foreach (MMDevice wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
 			{
-				Console.WriteLine($"{wasapi.ID} {wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
+				Logger.WriteLine($"{wasapi.ID} {wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
 				outputs.Add(i, wasapi);
 				audioOutputSelector.Items.Add(wasapi.FriendlyName);
 				i++;
@@ -371,7 +371,7 @@ namespace CrossTalkClient
 			outputBufferTimer.Start();
 
 
-			Console.WriteLine("SET OUTPUT FORMAT: "
+			Logger.WriteLine("SET OUTPUT FORMAT: "
 				+ "Sample Rate: " + sampleRate
 				+ ", BitsPrSasmple: " + bitsPrSample
 				+ ", Channels: " + channels);
@@ -446,7 +446,7 @@ namespace CrossTalkClient
 			{
 				tks += kvp.Value.ToString() + " ";
 			}
-			Console.WriteLine("TALKS1: " + tks);
+			Logger.WriteLine("TALKS1: " + tks);
 			MocrButton button = (MocrButton)sender;
 			if (connected)
 			{
@@ -476,7 +476,7 @@ namespace CrossTalkClient
 				tks += kvp.Value.ToString() + " ";
 			}
 
-			Console.WriteLine("TALKS2: " + tks);
+			Logger.WriteLine("TALKS2: " + tks);
 		}
 
 		private void SetInputMode(int mode)
