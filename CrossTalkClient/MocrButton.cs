@@ -15,6 +15,7 @@ namespace CrossTalkClient
 		public bool lit { get; private set; }
 		public bool flash { get; private set; }
 		private bool flashLit = false;
+		private bool talk = false;
 		
 
 		readonly private Brush SpacecraftButtonBrush = new SolidBrush(Color.FromArgb(255, 34, 34, 34));
@@ -118,6 +119,12 @@ namespace CrossTalkClient
 			this.Invalidate();
 		}
 
+		public void setTalkState(bool state)
+		{
+			this.talk = state;
+			this.Invalidate();
+		}
+
 		public void setFlashingState(bool state)
 		{
 			this.flash = state;
@@ -191,6 +198,11 @@ namespace CrossTalkClient
 				{
 					brush1 = litBrush;
 				}
+			}
+
+			if(talk)
+			{
+				brush1 = backgroundColorRedLit;
 			}
 
 			float innerX = 8;

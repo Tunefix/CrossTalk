@@ -111,7 +111,6 @@ namespace CrossTalkServer
 						clients[sender].AddSource((int)argument);
 						loops[(int)argument].addListenerToLoop(sender);
 						UdpServer.Reply(CMD.GetCmdBytes(CMDS.TurnOnLoopListenLight, argument), clients[sender].endpoint);
-						
 					}
 					break;
 				case CMDS.StopListeningToLoop:
@@ -125,15 +124,13 @@ namespace CrossTalkServer
 
 				case CMDS.StartTalkingToLoop:
 					// REMOVE TALKER FROM ALL LOOPS
+					for (int i = 0; i < loops.Count; i++)
 					{
-						for (int i = 0; i < loops.Count; i++)
+						if (loops[i].talkers.Contains(sender))
 						{
-							if (loops[i].talkers.Contains(sender))
-							{
-								loops[i].removeTalkerFromLoop(sender);
-								clients[sender].destinations.Remove(i);
-								UdpServer.Reply(CMD.GetCmdBytes(CMDS.TurnOffLoopTalkFlash, (byte)i), clients[sender].endpoint);
-							}
+							loops[i].removeTalkerFromLoop(sender);
+							clients[sender].destinations.Remove(i);
+							UdpServer.Reply(CMD.GetCmdBytes(CMDS.TurnOffLoopTalkFlash, (byte)i), clients[sender].endpoint);
 						}
 					}
 
@@ -151,6 +148,24 @@ namespace CrossTalkServer
 							if(c.IsConnected() && kvp.Key != sender)
 							{
 								UdpServer.Reply(CMD.GetCmdBytes(CMDS.TurnOnLoopTalkLight, argument), c.endpoint);
+							}
+						}
+					}
+
+					// Check if loop is left without talkers
+					for (int i = 0; i < loops.Count; i++)
+					{
+						if (loops[i].talkers.Count == 0)
+						{
+							// No more talkers in this loop, turn of active talker light for all users
+							foreach (KeyValuePair<string, Client> kvp in clients)
+							{
+								Client c = kvp.Value;
+
+								if (c.IsConnected())
+								{
+									UdpServer.Reply(CMD.GetCmdBytes(CMDS.TurnOffLoopTalkLight, (byte)i), c.endpoint);
+								}
 							}
 						}
 					}

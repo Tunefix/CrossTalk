@@ -119,13 +119,13 @@ namespace CrossTalkClient
 
 				case CMDS.TurnOnLoopTalkFlash:
 					if (talkButtons.Count > (int)argument) talkButtons[(int)argument].Invoke(new Action(() => {
-						talkButtons[(int)argument].setFlashingState(true);
+						talkButtons[(int)argument].setTalkState(true);
 						loopTalk[(int)argument] = true;
 					}));
 					break;
 				case CMDS.TurnOffLoopTalkFlash:
 					if (talkButtons.Count > (int)argument) talkButtons[(int)argument].Invoke(new Action(() => {
-						talkButtons[(int)argument].setFlashingState(false);
+						talkButtons[(int)argument].setTalkState(false);
 						loopTalk[(int)argument] = false;
 					}));
 					break;
