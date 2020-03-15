@@ -160,7 +160,7 @@ namespace CrossTalkClient
 			inputGainDisp = new SegDisp(2, true, "");
 			inputGainDisp.Location = new Point(380, 77);
 			inputGainDisp.Size = new Size(30, 20);
-			inputGainDisp.setValue("0");
+			inputGainDisp.setValue(inputGain.ToString());
 			this.Controls.Add(inputGainDisp);
 
 			inputGainPlus = new MocrButton();
@@ -251,7 +251,7 @@ namespace CrossTalkClient
 			outputGainDisp = new SegDisp(2, true, "");
 			outputGainDisp.Location = new Point(717, 77);
 			outputGainDisp.Size = new Size(30, 20);
-			outputGainDisp.setValue("0");
+			outputGainDisp.setValue(outputGain.ToString());
 			this.Controls.Add(outputGainDisp);
 
 			outputGainPlus = new MocrButton();

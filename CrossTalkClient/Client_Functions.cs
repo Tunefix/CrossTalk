@@ -66,6 +66,8 @@ namespace CrossTalkClient
 		int inputChannels;
 		int inputMode = 0; // 0: LR, 1: LL, 2: RR, 3: RL
 		int outputMode = 0; // 0: LR, 1: L, 2: R
+		int inputDevice = 0;
+		int outputDevice = 0;
 		WaveFormat inputFormat;
 
 		System.Windows.Forms.Timer outputBufferTimer;
@@ -270,18 +272,31 @@ namespace CrossTalkClient
 					{
 						case "server_ip":
 							Server_IP = chunks[1];
+							Logger.WriteLine("Set IP to: " + chunks[1]);
 							break;
 						case "input_gain":
 							inputGain = int.Parse(chunks[1]);
+							Logger.WriteLine("Set inputGain to: " + chunks[1]);
 							break;
 						case "output_gain":
 							outputGain = int.Parse(chunks[1]);
+							Logger.WriteLine("Set outputGain to: " + chunks[1]);
 							break;
 						case "input_mode":
 							inputMode = int.Parse(chunks[1]);
+							Logger.WriteLine("Set inputMode to: " + chunks[1]);
 							break;
 						case "output_mode":
 							outputMode = int.Parse(chunks[1]);
+							Logger.WriteLine("Set outputMode to: " + chunks[1]);
+							break;
+						case "input_device":
+							inputDevice = int.Parse(chunks[1]);
+							Logger.WriteLine("Set inputDevice to: " + chunks[1]);
+							break;
+						case "output_device":
+							outputDevice = int.Parse(chunks[1]);
+							Logger.WriteLine("Set outputDevice to: " + chunks[1]);
 							break;
 					}
 				}
@@ -308,7 +323,11 @@ namespace CrossTalkClient
 				i++;
 			}
 
-			if (inputs.Count > 0)
+			if (inputs.Count > inputDevice)
+			{
+				audioInputSelector.SelectedIndex = inputDevice;
+			}
+			else if(inputs.Count > 0)
 			{
 				audioInputSelector.SelectedIndex = 0;
 			}
@@ -318,9 +337,11 @@ namespace CrossTalkClient
 		{
 			// START CAPTURING SOUND FROM SELECTED DEVICE
 			MMDevice inputDevice = inputs[audioInputSelector.SelectedIndex];
+			StoreSetting("input_device", audioInputSelector.SelectedIndex.ToString());
+			Logger.WriteLine("Set inputDevice to: " + audioOutputSelector.SelectedIndex.ToString());
 
 
-			if(input != null) input.StopRecording();
+			if (input != null) input.StopRecording();
 
 			input = new WasapiCapture(inputDevice, true, inputLatency);
 
@@ -366,7 +387,12 @@ namespace CrossTalkClient
 				i++;
 			}
 
-			if (outputs.Count > 0)
+			if (outputs.Count > outputDevice)
+			{
+				audioOutputSelector.SelectedIndex = outputDevice;
+
+			}
+			else if (outputs.Count > 0)
 			{
 				audioOutputSelector.SelectedIndex = 0;
 			}
@@ -380,6 +406,8 @@ namespace CrossTalkClient
 			}
 
 			output = new WasapiOut(outputs[audioOutputSelector.SelectedIndex], AudioClientShareMode.Shared, true, outputLatency);
+			StoreSetting("output_device", audioOutputSelector.SelectedIndex.ToString());
+			Logger.WriteLine("Set outputDevice to: " + audioOutputSelector.SelectedIndex.ToString());
 
 			bitsPrSample = output.OutputWaveFormat.BitsPerSample;
 			sampleRate = output.OutputWaveFormat.SampleRate;
@@ -544,6 +572,7 @@ namespace CrossTalkClient
 				inputModeButtons[mode].setLitState(true);
 			}
 			StoreSetting("input_mode", inputMode.ToString());
+			Logger.WriteLine("Set inputMode to: " + inputMode.ToString());
 		}
 
 		private void SetOutputMode(int mode)
@@ -565,6 +594,7 @@ namespace CrossTalkClient
 				outputModeButtons[mode].setLitState(true);
 			}
 			StoreSetting("output_mode", outputMode.ToString());
+			Logger.WriteLine("Set outputMode to: " + outputMode.ToString());
 		}
 
 		private void UpdateBufferDisp()
