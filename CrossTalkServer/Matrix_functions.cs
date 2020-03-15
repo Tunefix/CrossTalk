@@ -104,6 +104,7 @@ namespace CrossTalkServer
 			List<float> output;
 			List<float> pfl;
 			int currentSamples = 0;
+			int connectedClients = 0;
 
 			// MIX CLIENTS AUDIO
 			lock (clientsLock)
@@ -113,6 +114,7 @@ namespace CrossTalkServer
 					Client c = kvp.Value;
 					if (c.IsConnected())
 					{
+						connectedClients++;
 						output = new List<float>();
 						for(int i = 0; i < c.currentSamples.Length / 4; i++) { output.Add(0f); }
 
@@ -164,7 +166,22 @@ namespace CrossTalkServer
 					}
 				}
 				byte[] bytes = Converters.floats2bytes(pfl.ToArray());
-				pflBuffer.AddSamples(bytes, 0, bytes.Length);
+
+				// If no clients are connected, ignore pfl
+				if (connectedClients > 0)
+				{
+					pflBuffer.AddSamples(bytes, 0, bytes.Length);
+
+					// Keep pflBuffer below 200ms
+					if (pflBuffer.BufferedDuration.TotalMilliseconds > 200)
+					{
+						double bytes_to_read = (sampleRate / 1000) * channels * (pflBuffer.BufferedDuration.TotalMilliseconds - 200);
+						byte[] void_array = new byte[(int)bytes_to_read];
+						pflBuffer.Read(void_array, 0, (int)bytes_to_read);
+
+						Logger.WriteLine("Trew away " + bytes_to_read.ToString() + " bytes from pflBuffer");
+					}
+				}
 			}
 		}
 

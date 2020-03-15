@@ -437,6 +437,7 @@ namespace CrossTalkServer
 			lineGraph.Location = new Point(1120, 20);
 			lineGraph.Size = new Size(600, 360);
 			lineGraph.SetScaleY(0, 20);
+			lineGraph.Font = tinyFont;
 			this.Controls.Add(lineGraph);
 		}
 	}
