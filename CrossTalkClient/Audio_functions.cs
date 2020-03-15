@@ -41,7 +41,11 @@ namespace CrossTalkClient
 		 *   input byte[] -> input processing -> inputBuffer -> resampler -> SendToServer
 		 ***/
 
-		private void MoveInputGain(int offset) { SetInputGain(inputGain + offset); }
+		private void MoveInputGain(int offset)
+		{
+			SetInputGain(inputGain + offset);
+			StoreSetting("input_gain", inputGain.ToString());
+		}
 		private void SetInputGain(int gain)
 		{
 			inputGain = gain;
@@ -50,7 +54,11 @@ namespace CrossTalkClient
 			inputGainMultiplier = (float)Math.Pow(Math.Pow(2d, 1d / 6d), inputGain);
 		}
 
-		private void MoveOutputGain(int offset) { SetOutputGain(outputGain + offset); }
+		private void MoveOutputGain(int offset)
+		{
+			SetOutputGain(outputGain + offset);
+			StoreSetting("output_gain", outputGain.ToString());
+		}
 		private void SetOutputGain(int gain)
 		{
 			outputGain = gain;
@@ -197,19 +205,50 @@ namespace CrossTalkClient
 			{
 				multi = 1;
 			}
-			
-			for (i = 0; i < floats.Length; i ++)
+
+			// If mono2stereo is enabled (using a mono-codec), step one each time
+			// If mono2stereo is false (using a stereo-codec), step two each time (read l + r sample)
+			int a = mono2stereo ? 1 : 2;
+			for (i = 0; i < floats.Length; i += 2)
 			{
 				// get bytes
 				vb = BitConverter.GetBytes(floats[i] * multi);
 
 				// Left channel
-				fs.Add(vb[0]);
-				fs.Add(vb[1]);
-				fs.Add(vb[2]);
-				fs.Add(vb[3]);
+				if (outputMode == 2)
+				{
+					// RIGHT OUTPUT ONLY, ADD SILENCE TO LEFT
+					byte[] sb = BitConverter.GetBytes(0f);
+					fs.Add(sb[0]);
+					fs.Add(sb[1]);
+					fs.Add(sb[2]);
+					fs.Add(sb[3]);
+				}
+				else
+				{
+					fs.Add(vb[0]);
+					fs.Add(vb[1]);
+					fs.Add(vb[2]);
+					fs.Add(vb[3]);
+				}
 
-				if (mono2stereo)
+				// Right channel
+				if (!mono2stereo)
+				{
+					// Fetch sample for right channel
+					vb = BitConverter.GetBytes(floats[i + 1] * multi);
+				}
+
+				if (outputMode == 1)
+				{
+					// LEFT OUTPUT ONLY, ADD SILENCE TO RIGHT
+					byte[] sb = BitConverter.GetBytes(0f);
+					fs.Add(sb[0]);
+					fs.Add(sb[1]);
+					fs.Add(sb[2]);
+					fs.Add(sb[3]);
+				}
+				else
 				{
 					// Right channel
 					fs.Add(vb[0]);
@@ -217,6 +256,17 @@ namespace CrossTalkClient
 					fs.Add(vb[2]);
 					fs.Add(vb[3]);
 				}
+			}
+
+			// EMPTY CHANNEL IF OUTPUT MODE IS NOT LR
+			if(outputMode == 1)
+			{
+				// LEFT OUTPUT ONLY
+
+			}
+			if(outputMode == 2)
+			{
+				// RIGHT OUTPUT ONLY
 			}
 
 			addSamplesToBuffer(fs, buffer);

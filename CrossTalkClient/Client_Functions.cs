@@ -64,7 +64,8 @@ namespace CrossTalkClient
 		int inputBitsPrSample;
 		int inputSampleRate;
 		int inputChannels;
-		int inputMode; // 0: LR, 1: LL, 2: RR, 3: RL
+		int inputMode = 0; // 0: LR, 1: LL, 2: RR, 3: RL
+		int outputMode = 0; // 0: LR, 1: L, 2: R
 		WaveFormat inputFormat;
 
 		System.Windows.Forms.Timer outputBufferTimer;
@@ -270,6 +271,18 @@ namespace CrossTalkClient
 						case "server_ip":
 							Server_IP = chunks[1];
 							break;
+						case "input_gain":
+							inputGain = int.Parse(chunks[1]);
+							break;
+						case "output_gain":
+							outputGain = int.Parse(chunks[1]);
+							break;
+						case "input_mode":
+							inputMode = int.Parse(chunks[1]);
+							break;
+						case "output_mode":
+							outputMode = int.Parse(chunks[1]);
+							break;
 					}
 				}
 			}
@@ -322,7 +335,7 @@ namespace CrossTalkClient
 
 			inputResampler = new WdlResamplingSampleProvider(inputBuffer.ToSampleProvider(), internalFormatStereo.SampleRate);
 
-			SetInputMode(0);
+			SetInputMode(inputMode);
 
 			Logger.WriteLine("SET INPUT FORMAT: "
 				+ "Sample Rate: " + inputSampleRate
@@ -387,6 +400,8 @@ namespace CrossTalkClient
 
 			outputMeter = new MeteringSampleProvider(resampler, samplesPrIntegration);
 			outputMeter.StreamVolume += (a, b) => RunOutputMeter(a, b, meter);
+
+			SetOutputMode(outputMode);
 
 
 			output.Init(outputMeter);
@@ -528,6 +543,28 @@ namespace CrossTalkClient
 
 				inputModeButtons[mode].setLitState(true);
 			}
+			StoreSetting("input_mode", inputMode.ToString());
+		}
+
+		private void SetOutputMode(int mode)
+		{
+			if (outputFormat.Channels == 1)
+			{
+				// TURN OFF ALL MODES
+				outputModeButtons[0].setLitState(false);
+				outputModeButtons[1].setLitState(false);
+				outputModeButtons[2].setLitState(false);
+			}
+			else
+			{
+				outputMode = mode;
+				outputModeButtons[0].setLitState(false);
+				outputModeButtons[1].setLitState(false);
+				outputModeButtons[2].setLitState(false);
+
+				outputModeButtons[mode].setLitState(true);
+			}
+			StoreSetting("output_mode", outputMode.ToString());
 		}
 
 		private void UpdateBufferDisp()

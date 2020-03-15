@@ -31,6 +31,7 @@ namespace CrossTalkClient
 		List<MocrButton> listenButtons = new List<MocrButton>();
 		List<MocrButton> talkButtons = new List<MocrButton>();
 		List<MocrButton> inputModeButtons = new List<MocrButton>();
+		List<MocrButton> outputModeButtons = new List<MocrButton>();
 		EventIndicator outputPlayingIndicator;
 		EventIndicator outputPausedIndicator;
 		EventIndicator outputStoppedIndicator;
@@ -188,6 +189,45 @@ namespace CrossTalkClient
 			audioOutputSelector.Font = smallFont;
 			audioOutputSelector.SelectedIndexChanged += AudioOutput_SelectedIndexChanged;
 			this.Controls.Add(audioOutputSelector);
+
+			// OUTPUT MODE
+			lbl = new CustomLabel();
+			lbl.Location = new Point(457, 80);
+			lbl.Size = new Size(50, 20);
+			lbl.Font = smallFont;
+			lbl.type = CustomLabel.LabelType.NORMAL;
+			lbl.Text = "MODE:";
+			this.Controls.Add(lbl);
+
+			outputModeButtons.Add(new MocrButton());
+			outputModeButtons[0].Font = tinyFont;
+			outputModeButtons[0].buttonStyle = MocrButton.style.TINY_LIGHT;
+			outputModeButtons[0].setLightColor(MocrButton.color.BLANK);
+			outputModeButtons[0].Text = "LR";
+			outputModeButtons[0].Location = new Point(507, 77);
+			outputModeButtons[0].Size = new Size(32, 20);
+			outputModeButtons[0].Click += (sender, e) => SetOutputMode(0);
+			this.Controls.Add(outputModeButtons[0]);
+
+			outputModeButtons.Add(new MocrButton());
+			outputModeButtons[1].Font = tinyFont;
+			outputModeButtons[1].buttonStyle = MocrButton.style.TINY_LIGHT;
+			outputModeButtons[1].setLightColor(MocrButton.color.BLANK);
+			outputModeButtons[1].Text = "L";
+			outputModeButtons[1].Location = new Point(539, 77);
+			outputModeButtons[1].Size = new Size(32, 20);
+			outputModeButtons[1].Click += (sender, e) => SetOutputMode(1);
+			this.Controls.Add(outputModeButtons[1]);
+
+			outputModeButtons.Add(new MocrButton());
+			outputModeButtons[2].Font = tinyFont;
+			outputModeButtons[2].buttonStyle = MocrButton.style.TINY_LIGHT;
+			outputModeButtons[2].setLightColor(MocrButton.color.BLANK);
+			outputModeButtons[2].Text = "R";
+			outputModeButtons[2].Location = new Point(571, 77);
+			outputModeButtons[2].Size = new Size(32, 20);
+			outputModeButtons[2].Click += (sender, e) => SetOutputMode(2);
+			this.Controls.Add(outputModeButtons[2]);
 
 
 			// OUTPUT GAIN
