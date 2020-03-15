@@ -29,8 +29,11 @@ namespace CrossTalkServer
 
 		public void SetLitState(bool state)
 		{
-			lit = state;
-			this.Invalidate();
+			if (lit != state)
+			{
+				lit = state;
+				this.Invalidate();
+			}
 		}
 
 		public void SetColors(DiodeColor c)
