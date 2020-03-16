@@ -179,7 +179,7 @@ namespace CrossTalkServer
 						byte[] void_array = new byte[(int)bytes_to_read];
 						pflBuffer.Read(void_array, 0, (int)bytes_to_read);
 
-						Logger.WriteLine("Trew away " + bytes_to_read.ToString() + " bytes from pflBuffer");
+						//Logger.WriteLine("Trew away " + bytes_to_read.ToString() + " bytes from pflBuffer");
 					}
 				}
 			}
