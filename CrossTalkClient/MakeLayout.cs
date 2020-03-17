@@ -347,7 +347,7 @@ namespace CrossTalkClient
 			lbl.Font = tinyFont;
 			lbl.setCharWidth(6);
 			lbl.type = CustomLabel.LabelType.ENGRAVED;
-			lbl.Text = "LOOP CONTROL (YELLOW = LISTEN, WHITE FLSH = TALKING TO THIS LOOP, WHITE STDY = SOMEONE HAS ENABLED TALK)";
+			lbl.Text = "LOOP CONTROL (YELLOW = LISTEN, RED = TALKING TO THIS LOOP, WHITE = SOMEONE HAS ENABLED TALK)";
 			this.Controls.Add(lbl);
 
 			for (int i = 0; i < numLoops; i++)
