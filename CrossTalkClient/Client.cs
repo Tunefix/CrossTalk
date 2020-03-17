@@ -35,6 +35,14 @@ namespace CrossTalkClient
 		{
 			Logger = new Logging();
 
+			AppDomain.CurrentDomain.FirstChanceException += (a, eventArgs) =>
+			{
+				Logger.WriteLine(eventArgs.Exception.ToString()
+					+ "\n" + eventArgs.Exception.StackTrace
+					+ "\n" + eventArgs.Exception.TargetSite);
+
+			};
+
 			this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "Resources\\darknoise.png");
 			this.BackColor = Color.FromArgb(72, 72, 72);
 			this.ClientSize = new Size(794, 417);
