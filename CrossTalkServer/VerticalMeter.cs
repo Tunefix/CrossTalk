@@ -34,6 +34,10 @@ namespace CrossTalkServer
 		readonly Brush scaleBrush = new SolidBrush(Color.FromArgb(240, 255, 255, 255));
 		readonly Brush pointerBrush = new SolidBrush(Color.FromArgb(255, 16, 16, 16));
 
+		// We only render the static background a single time.
+		// No use in rendering it on all invalidates.
+		Bitmap background;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -47,8 +51,8 @@ namespace CrossTalkServer
 			this.subdivisions = 0;
 		}
 
-		public void setScale(int min, int max) { setScale1(min, max); setScale2(min, max);}
-		
+		public void setScale(int min, int max) { setScale1(min, max); setScale2(min, max); }
+
 		public void setScale1(int min, int max)
 		{
 			scale1min = min;
@@ -57,7 +61,7 @@ namespace CrossTalkServer
 			manScale1.Add(min);
 			manScale1.Add(max);
 		}
-		
+
 		public void setScale2(int min, int max)
 		{
 			scale2min = min;
@@ -70,7 +74,7 @@ namespace CrossTalkServer
 		public void setManScale1(float[] labels)
 		{
 			manScale1.Clear();
-			foreach(float f in labels)
+			foreach (float f in labels)
 			{
 				manScale1.Add(f);
 			}
@@ -85,15 +89,15 @@ namespace CrossTalkServer
 			}
 		}
 
-		public void setValue(float value) { setValue1(value); setValue2(value);}
-		
+		public void setValue(float value) { setValue1(value); setValue2(value); }
+
 		public void setValue1(float value)
 		{
 			value1 = value;
 
 			this.Invalidate();
 		}
-		
+
 		public void setValue2(float value)
 		{
 			value2 = value;
@@ -103,42 +107,69 @@ namespace CrossTalkServer
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			Graphics g = e.Graphics;
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			g.InterpolationMode = InterpolationMode.HighQualityBilinear;
-			g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+			try
+			{
 
-			RectangleF Rect = new Rectangle(0, 0, Width, Height);
-			Rectangle Rectb = new Rectangle(0, 0, Width, Height);
+				Graphics g = e.Graphics;
+				g.SmoothingMode = SmoothingMode.AntiAlias;
+				g.InterpolationMode = InterpolationMode.HighQualityBilinear;
+				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
+				RectangleF Rect = new Rectangle(0, 0, Width, Height);
+				Rectangle Rectb = new Rectangle(0, 0, Width, Height);
+
+				// Peg the arrows
+				if (value1 > scale1max) { value1 = scale1max; }
+				if (value1 < scale1min) { value1 = scale1min; }
+				if (value2 > scale2max) { value2 = scale2max; }
+				if (value2 < scale2min) { value2 = scale2min; }
+
+				// Set nan to scaleMinimum
+				if (double.IsNaN((double)value1)) { value1 = scale1min; }
+				if (double.IsNaN((double)value2)) { value2 = scale2min; }
+
+
+				if (background == null)
+				{
+					background = new Bitmap(this.Width, this.Height);
+					Graphics h = Graphics.FromImage(background);
+					MakeBackground(h);
+				}
+
+				g.DrawImage(background, 0f, 0f);
+
+
+				if (doubleMeter)
+				{
+					drawDoublePointer(g);
+				}
+				else
+				{
+					drawSinglePointer(g);
+				}
+
+				// Border Line
+				g.DrawRectangle(borderPen, Rectb);
+			}
+			catch (Exception)
+			{ }
+		}
+
+		private void MakeBackground(Graphics g)
+		{
 			// Black background
-			g.FillRectangle(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), Rect);
-
-			// Peg the arrows
-			if (value1 > scale1max) { value1 = scale1max; }
-			if (value1 < scale1min) { value1 = scale1min; }
-			if (value2 > scale2max) { value2 = scale2max; }
-			if (value2 < scale2min) { value2 = scale2min; }
-
-			// Set nan to scaleMinimum
-			if (double.IsNaN((double)value1)){ value1 = scale1min; }
-			if (double.IsNaN((double)value2)){ value2 = scale2min; }
+			g.FillRectangle(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), new Rectangle(0, 0, Width, Height));
 
 			if (doubleMeter)
 			{
 				drawDoubleWhite(g);
 				drawDoubleScale(g);
-				drawDoublePointer(g);
 			}
 			else
 			{
 				drawSingleWhite(g);
 				drawSingleScale(g);
-				drawSinglePointer(g);
 			}
-			
-			// Border Line
-			g.DrawRectangle(borderPen, Rectb);
 		}
 
 		private void drawSingleWhite(Graphics g)
@@ -215,7 +246,7 @@ namespace CrossTalkServer
 			if (scaleType == 2)
 			{
 				// MANUAL SCALE
-				foreach(float f in manScale1)
+				foreach (float f in manScale1)
 				{
 					float y1 = (Height - 10) - (scaleData[1] * f);
 					float y2 = y1;
@@ -247,8 +278,8 @@ namespace CrossTalkServer
 				}
 			}
 		}
-		
-		
+
+
 		private void drawDoubleScale(Graphics g)
 		{
 			if (singleScale)
@@ -411,8 +442,8 @@ namespace CrossTalkServer
 			RectangleF Rect = new RectangleF(0, y - 1, 4, 2);
 			g.FillRectangle(pointerBrush, Rect);
 		}
-		
-		
+
+
 		private void drawDoublePointer(Graphics g)
 		{
 			// Pointer 1
@@ -432,8 +463,8 @@ namespace CrossTalkServer
 
 			RectangleF Rect = new RectangleF(0, y - 1, 4, 2);
 			g.FillRectangle(pointerBrush, Rect);
-			
-			
+
+
 			// Pointer 2
 			scaler = (Height - 20) / (double)Math.Abs(scale2max - scale2min);
 			y = (float)((Height - 10) - ((value2 - scale2min) * scaler));
@@ -467,13 +498,13 @@ namespace CrossTalkServer
 		private float[] getScaleData(int max, int min)
 		{
 			float[] ret = new float[4];
-			
+
 			int split = max - min;
 			float xPrPx = (float)(split / (Height - 20f));
 			int maxLabels = (int)Math.Floor((Height - 20) / 25f);
 			int numLabels = (int)(Math.Ceiling(maxLabels / 5f) * 5);
 			float gridStep = split / (float)numLabels;
-			
+
 			int gridLines = (int)Math.Floor(split / gridStep);
 			float gridStepPx = (float)(gridStep / xPrPx);
 

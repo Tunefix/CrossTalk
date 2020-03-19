@@ -34,6 +34,10 @@ namespace CrossTalkClient
 		readonly Brush scaleBrush = new SolidBrush(Color.FromArgb(240, 255, 255, 255));
 		readonly Brush pointerBrush = new SolidBrush(Color.FromArgb(255, 16, 16, 16));
 
+		// We only render the static background a single time.
+		// No use in rendering it on all invalidates.
+		Bitmap background;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -114,9 +118,6 @@ namespace CrossTalkClient
 				RectangleF Rect = new Rectangle(0, 0, Width, Height);
 				Rectangle Rectb = new Rectangle(0, 0, Width, Height);
 
-				// Black background
-				g.FillRectangle(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), Rect);
-
 				// Peg the arrows
 				if (value1 > scale1max) { value1 = scale1max; }
 				if (value1 < scale1min) { value1 = scale1min; }
@@ -127,16 +128,23 @@ namespace CrossTalkClient
 				if (double.IsNaN((double)value1)) { value1 = scale1min; }
 				if (double.IsNaN((double)value2)) { value2 = scale2min; }
 
+
+				if (background == null)
+				{
+					background = new Bitmap(this.Width, this.Height);
+					Graphics h = Graphics.FromImage(background);
+					MakeBackground(h);
+				}
+
+				g.DrawImage(background, 0f, 0f);
+				
+
 				if (doubleMeter)
 				{
-					drawDoubleWhite(g);
-					drawDoubleScale(g);
 					drawDoublePointer(g);
 				}
 				else
 				{
-					drawSingleWhite(g);
-					drawSingleScale(g);
 					drawSinglePointer(g);
 				}
 
@@ -145,6 +153,23 @@ namespace CrossTalkClient
 			}
 			catch(Exception)
 			{ }
+		}
+
+		private void MakeBackground(Graphics g)
+		{
+			// Black background
+			g.FillRectangle(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), new Rectangle(0, 0, Width, Height));
+
+			if (doubleMeter)
+			{
+				drawDoubleWhite(g);
+				drawDoubleScale(g);
+			}
+			else
+			{
+				drawSingleWhite(g);
+				drawSingleScale(g);
+			}
 		}
 
 		private void drawSingleWhite(Graphics g)
@@ -489,6 +514,16 @@ namespace CrossTalkClient
 			ret[3] = xPrPx;
 
 			return ret;
+		}
+
+		public float getValue1()
+		{
+			return value1;
+		}
+
+		public float getValue2()
+		{
+			return value2;
 		}
 	}
 }
